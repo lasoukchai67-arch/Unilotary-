@@ -16,7 +16,14 @@ class Settings(BaseModel):
 
     CORS_ORIGINS: list[str] = ["*"]
     S3_BUCKET_NAME: str = os.getenv("S3_BUCKET_NAME", "")
-    AWS_REGION: str = os.getenv("AWS_REGION", "ap-southeast-1")
+    AWS_REGION: str = os.getenv("AWS_REGION", "auto")
+    
+    # Cloudflare R2 Support
+    CLOUDFLARE_ACCOUNT_ID: str = os.getenv("CLOUDFLARE_ACCOUNT_ID", "")
+    S3_ENDPOINT_URL: str = os.getenv(
+        "S3_ENDPOINT_URL", 
+        f"https://{os.getenv('CLOUDFLARE_ACCOUNT_ID')}.r2.cloudflarestorage.com" if os.getenv('CLOUDFLARE_ACCOUNT_ID') else None
+    )
 
 
 settings = Settings()

@@ -26,11 +26,16 @@ class StorageProvider(ABC):
 
 
 class S3StorageProvider(StorageProvider):
-    def __init__(self, bucket_name: str, region: str = "ap-southeast-1"):
+    def __init__(self, bucket_name: str, region: str = "ap-southeast-1", endpoint_url: Optional[str] = None):
         import boto3
         from botocore.config import Config
         self.bucket = bucket_name
-        self.client = boto3.client("s3", region_name=region, config=Config(signature_version="s3v4"))
+        self.client = boto3.client(
+            "s3", 
+            region_name=region, 
+            endpoint_url=endpoint_url,
+            config=Config(signature_version="s3v4")
+        )
 
     def upload_file(self, file_bytes: bytes, storage_key: str, content_type: str) -> Dict[str, Any]:
         self.client.put_object(
@@ -86,9 +91,14 @@ class CloudStorageService:
         if provider:
             self.provider = provider
         else:
-            bucket_name = os.getenv("S3_BUCKET_NAME")
+            from app.core.config import settings
+            bucket_name = settings.S3_BUCKET_NAME
             if bucket_name:
-                self.provider = S3StorageProvider(bucket_name)
+                self.provider = S3StorageProvider(
+                    bucket_name=bucket_name,
+                    region=settings.AWS_REGION,
+                    endpoint_url=settings.S3_ENDPOINT_URL
+                )
             else:
                 self.provider = LocalStorageProvider()
 
