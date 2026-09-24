@@ -6,47 +6,6 @@ import { DEFAULT_ANIMALS, MULTIPLIERS, WHEEL_PRIZES } from './data/constants.js'
 // Application State
 
 // Animal Catalog Local Fallback (in case API is starting up)
-  { animal_id: 2, animal_name_lo: "ຫອຍ", animal_name_en: "Snail", base_number: "02", related_numbers: "02, 42, 82", icon_symbol: "🐚" },
-  { animal_id: 3, animal_name_lo: "ຫ່ານ", animal_name_en: "Goose", base_number: "03", related_numbers: "03, 43, 83", icon_symbol: "🪿" },
-  { animal_id: 4, animal_name_lo: "ນົກຍູງ", animal_name_en: "Peacock", base_number: "04", related_numbers: "04, 44, 84", icon_symbol: "🦚" },
-  { animal_id: 5, animal_name_lo: "ສິງ", animal_name_en: "Lion", base_number: "05", related_numbers: "05, 45, 85", icon_symbol: "🦁" },
-  { animal_id: 6, animal_name_lo: "ເສືອ", animal_name_en: "Tiger", base_number: "06", related_numbers: "06, 46, 86", icon_symbol: "🐯" },
-  { animal_id: 7, animal_name_lo: "ໝູ", animal_name_en: "Pig", base_number: "07", related_numbers: "07, 47, 87", icon_symbol: "🐷" },
-  { animal_id: 8, animal_name_lo: "ກະຕ່າຍ", animal_name_en: "Rabbit", base_number: "08", related_numbers: "08, 48, 88", icon_symbol: "🐰" },
-  { animal_id: 9, animal_name_lo: "ຄວາຍ", animal_name_en: "Buffalo", base_number: "09", related_numbers: "09, 49, 89", icon_symbol: "🐃" },
-  { animal_id: 10, animal_name_lo: "ນາກບິນ", animal_name_en: "Flying Dragon", base_number: "10", related_numbers: "10, 50, 90", icon_symbol: "🐉" },
-  { animal_id: 11, animal_name_lo: "ໝາ", animal_name_en: "Dog", base_number: "11", related_numbers: "11, 51, 91", icon_symbol: "🐶" },
-  { animal_id: 12, animal_name_lo: "ມ້າ", animal_name_en: "Horse", base_number: "12", related_numbers: "12, 52, 92", icon_symbol: "🐴" },
-  { animal_id: 13, animal_name_lo: "ຊ້າງ", animal_name_en: "Elephant", base_number: "13", related_numbers: "13, 53, 93", icon_symbol: "🐘" },
-  { animal_id: 14, animal_name_lo: "ແມວບ້ານ", animal_name_en: "Cat", base_number: "14", related_numbers: "14, 54, 94", icon_symbol: "🐱" },
-  { animal_id: 15, animal_name_lo: "ໜູ", animal_name_en: "Rat", base_number: "15", related_numbers: "15, 55, 95", icon_symbol: "🐭" },
-  { animal_id: 16, animal_name_lo: "ເຜິ້ງ", animal_name_en: "Bee", base_number: "16", related_numbers: "16, 56, 96", icon_symbol: "🐝" },
-  { animal_id: 17, animal_name_lo: "ນົກກາງແກ", animal_name_en: "Pigeon", base_number: "17", related_numbers: "17, 57, 97", icon_symbol: "🕊️" },
-  { animal_id: 18, animal_name_lo: "ແຄ້ວ / ແຂ້", animal_name_en: "Crocodile", base_number: "18", related_numbers: "18, 58, 98", icon_symbol: "🐊" },
-  { animal_id: 19, animal_name_lo: "ແມງກະເບື້ອ", animal_name_en: "Butterfly", base_number: "19", related_numbers: "19, 59, 99", icon_symbol: "🦋" },
-  { animal_id: 20, animal_name_lo: "ຂີ້ເຂັບ", animal_name_en: "Centipede", base_number: "20", related_numbers: "20, 60, 00", icon_symbol: "🐛" },
-  { animal_id: 21, animal_name_lo: "ນົກກືດ", animal_name_en: "Swallow", base_number: "21", related_numbers: "21, 61", icon_symbol: "🐦" },
-  { animal_id: 22, animal_name_lo: "ນົກກົກ", animal_name_en: "Hornbill", base_number: "22", related_numbers: "22, 62", icon_symbol: "🦜" },
-  { animal_id: 23, animal_name_lo: "ລີງ", animal_name_en: "Monkey", base_number: "23", related_numbers: "23, 63", icon_symbol: "🐒" },
-  { animal_id: 24, animal_name_lo: "ກົບ", animal_name_en: "Frog", base_number: "24", related_numbers: "24, 64", icon_symbol: "🐸" },
-  { animal_id: 25, animal_name_lo: "ເຫງັ້ນ", animal_name_en: "Civet", base_number: "25", related_numbers: "25, 65", icon_symbol: "🦡" },
-  { animal_id: 26, animal_name_lo: "ນົກເຂົາ", animal_name_en: "Turtle Dove", base_number: "26", related_numbers: "26, 66", icon_symbol: "🐦‍⬛" },
-  { animal_id: 27, animal_name_lo: "ເຕົ່າ", animal_name_en: "Turtle", base_number: "27", related_numbers: "27, 67", icon_symbol: "🐢" },
-  { animal_id: 28, animal_name_lo: "ໄກ່", animal_name_en: "Rooster", base_number: "28", related_numbers: "28, 68", icon_symbol: "🐓" },
-  { animal_id: 29, animal_name_lo: "ອຽນ", animal_name_en: "Eel", base_number: "29", related_numbers: "29, 69", icon_symbol: "🐍" },
-  { animal_id: 30, animal_name_lo: "ປານ້ອຍ", animal_name_en: "Small Fish", base_number: "30", related_numbers: "30, 70", icon_symbol: "🐠" },
-  { animal_id: 31, animal_name_lo: "ກຸ້ງ", animal_name_en: "Shrimp", base_number: "31", related_numbers: "31, 71", icon_symbol: "🦐" },
-  { animal_id: 32, animal_name_lo: "ງູ", animal_name_en: "Snake", base_number: "32", related_numbers: "32, 72", icon_symbol: "🐍" },
-  { animal_id: 33, animal_name_lo: "ແມງມຸມ", animal_name_en: "Spider", base_number: "33", related_numbers: "33, 73", icon_symbol: "🕷️" },
-  { animal_id: 34, animal_name_lo: "ກວາງ", animal_name_en: "Deer", base_number: "34", related_numbers: "34, 74", icon_symbol: "🦌" },
-  { animal_id: 35, animal_name_lo: "ແບ້", animal_name_en: "Goat", base_number: "35", related_numbers: "35, 75", icon_symbol: "🐐" },
-  { animal_id: 36, animal_name_lo: "ເຫຍັ້ນ", animal_name_en: "Otter", animal_id: 36, base_number: "36", related_numbers: "36, 76", icon_symbol: "🦦" },
-  { animal_id: 37, animal_name_lo: "ຕຸ່ນ", animal_name_en: "Bamboo Rat", base_number: "37", related_numbers: "37, 77", icon_symbol: "🦔" },
-  { animal_id: 38, animal_name_lo: "ໝາໄນ", animal_name_en: "Wolf", base_number: "38", related_numbers: "38, 78", icon_symbol: "🐺" },
-  { animal_id: 39, animal_name_lo: "ແມ່ໝີ", animal_name_en: "Bear", base_number: "39", related_numbers: "39, 79", icon_symbol: "🐻" },
-  { animal_id: 40, animal_name_lo: "ນົກອິນຊີ", animal_name_en: "Eagle", base_number: "40", related_numbers: "40, 80", icon_symbol: "🦅" }
-];
-
 
 // Formatting helpers
 function formatLAK(num) {
@@ -336,15 +295,6 @@ function initScratchCard() {
 }
 
 // 4. Lucky Spin Wheel Logic
-  { label: 'ໂຊກດີຄັ້ງໜ້າ', amount: 0, color: '#1e293b' },
-  { label: '2,000 ₭', amount: 2000, color: '#f59e0b' },
-  { label: 'ປີ້ຟຣີ 5,000 ₭', amount: 5000, color: '#059669' },
-  { label: '5,000 ₭', amount: 5000, color: '#2563eb' },
-  { label: 'ຄູນ 2x UniLotary', amount: 2000, color: '#7c3aed' },
-  { label: '10,000 ₭', amount: 10000, color: '#d97706' },
-  { label: '👑 50,000 ₭', amount: 50000, color: '#dc2626' }
-];
-
 function spinLuckyWheel() {
   if (state.luckyWheel.isSpinning) return;
   state.luckyWheel.isSpinning = true;
