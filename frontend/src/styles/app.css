@@ -1,0 +1,846 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Lao:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&display=swap');
+
+:root {
+  --sokxay-red: #e31b23;
+  --sokxay-red-hover: #c4151b;
+  --bg-primary: #f0f2f5;
+  --bg-secondary: #ffffff;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f8f9fa;
+  --border-glass: #e2e8f0;
+  --border-gold: #fbbf24;
+
+  --gold-primary: #f59e0b;
+  --gold-secondary: #d97706;
+  --gold-gradient: linear-gradient(135deg, #fcd34d 0%, #f59e0b 50%, #d97706 100%);
+  
+  --emerald-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  --red-gradient: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  --blue-gradient: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  
+  --bcel-red: #dc2626;
+
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+  --text-gold: #b45309;
+
+  --font-family: 'Noto Sans Lao', 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+
+  --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --safe-bottom: env(safe-area-inset-bottom, 16px);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+  font-family: var(--font-family);
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-main);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* App Container (Mobile centered view) */
+.app-container {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding-bottom: calc(85px + var(--safe-bottom));
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+  background-color: var(--bg-primary);
+}
+
+/* Header */
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--sokxay-red);
+  color: #ffffff;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 10px rgba(227, 27, 35, 0.3);
+}
+
+.logo-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-icon-svg {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: white;
+  padding: 2px;
+}
+
+.logo-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+.logo-subtitle {
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.8);
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.wallet-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: var(--radius-full);
+  padding: 5px 12px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.topup-btn {
+  background: #ffffff;
+  color: var(--sokxay-red);
+  border: none;
+  font-size: 0.75rem;
+  font-weight: 800;
+  border-radius: var(--radius-full);
+  padding: 5px 10px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Install PWA Prompt Banner */
+.install-banner {
+  background: linear-gradient(90deg, #3b82f6, #2563eb);
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: white;
+}
+
+.install-text {
+  font-size: 0.82rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.install-btn {
+  background: #ffffff;
+  color: #2563eb;
+  border: none;
+  padding: 5px 12px;
+  border-radius: var(--radius-full);
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* Draw Hero Banner */
+.draw-banner {
+  margin: 14px 16px;
+  padding: 16px 18px;
+  background: #ffffff;
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  position: relative;
+  overflow: hidden;
+}
+
+.draw-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.draw-badge-pill {
+  background: var(--sokxay-red);
+  color: white;
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.draw-code-label {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-family: monospace;
+}
+
+.draw-countdown {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.time-box {
+  background: #f8fafc;
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-sm);
+  padding: 6px 10px;
+  text-align: center;
+  flex: 1;
+}
+
+.time-num {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--sokxay-red);
+  font-family: 'Outfit', sans-serif;
+  line-height: 1;
+}
+
+.time-label {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* Category Switcher Tabs */
+.nav-tabs {
+  display: flex;
+  overflow-x: auto;
+  gap: 8px;
+  padding: 4px 16px 12px 16px;
+  scrollbar-width: none;
+}
+
+.nav-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.tab-btn {
+  background: #ffffff;
+  border: 1px solid var(--border-glass);
+  color: var(--text-muted);
+  padding: 8px 16px;
+  border-radius: var(--radius-full);
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.tab-btn.active {
+  background: var(--sokxay-red);
+  color: #ffffff;
+  font-weight: 800;
+  border-color: var(--sokxay-red);
+  box-shadow: 0 4px 10px rgba(227, 27, 35, 0.2);
+}
+
+/* Main Content Area */
+.content-area {
+  padding: 0 16px;
+  flex: 1;
+}
+
+/* Number Pad & Input Screen */
+.input-display-card {
+  background: #ffffff;
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow-card);
+}
+
+.chosen-digits-display {
+  background: #f8fafc;
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.digits-large {
+  font-size: 2rem;
+  font-weight: 900;
+  letter-spacing: 6px;
+  color: var(--sokxay-red);
+  font-family: 'Outfit', monospace;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+}
+
+.placeholder-text {
+  color: #94a3b8;
+  letter-spacing: 2px;
+  font-size: 1.1rem;
+}
+
+.clear-btn {
+  background: #fee2e2;
+  color: #ef4444;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* Quick Bet Amount Pills */
+.amount-pills-row {
+  display: flex;
+  overflow-x: auto;
+  gap: 6px;
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+  scrollbar-width: none;
+}
+
+.amount-pill {
+  background: #f1f5f9;
+  border: 1px solid var(--border-glass);
+  color: var(--text-muted);
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.amount-pill.selected {
+  background: var(--sokxay-red);
+  border-color: var(--sokxay-red);
+  color: #ffffff;
+}
+
+/* Multiplier Info Card */
+.potential-prize-badge {
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+}
+
+.prize-highlight {
+  color: #059669;
+  font-weight: 800;
+  font-size: 1rem;
+}
+
+/* Keypad Grid */
+.keypad-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.keypad-btn {
+  background: #ffffff;
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-md);
+  color: var(--text-main);
+  font-size: 1.4rem;
+  font-weight: 700;
+  font-family: 'Outfit', sans-serif;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.keypad-btn:active {
+  background: #f1f5f9;
+}
+
+.keypad-btn.action {
+  font-size: 0.95rem;
+  background: #fef3c7;
+  border-color: #fde68a;
+  color: #d97706;
+}
+
+/* Add to Bet Slip Action Button */
+.add-slip-btn {
+  width: 100%;
+  padding: 14px;
+  border-radius: var(--radius-md);
+  background: var(--sokxay-red);
+  color: #ffffff;
+  border: none;
+  font-size: 1.05rem;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 15px rgba(227, 27, 35, 0.3);
+}
+
+/* Animal Grid View */
+.animals-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  max-height: 580px;
+  overflow-y: auto;
+  padding-bottom: 20px;
+}
+
+.animal-card {
+  background: #ffffff;
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.animal-card.selected {
+  border-color: var(--sokxay-red);
+  background: #fef2f2;
+  box-shadow: 0 0 0 1px var(--sokxay-red);
+}
+
+.animal-icon {
+  font-size: 1.8rem;
+}
+
+.animal-info {
+  flex: 1;
+}
+
+.animal-name {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.animal-base-number {
+  font-size: 1.15rem;
+  font-weight: 900;
+  color: var(--sokxay-red);
+  font-family: 'Outfit', sans-serif;
+}
+
+.animal-related {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+}
+
+/* Floating Cart / Bet Slip Bar */
+.cart-floating-bar {
+  position: fixed;
+  bottom: calc(65px + var(--safe-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 32px);
+  max-width: 448px;
+  background: #ffffff;
+  border: 2px solid var(--sokxay-red);
+  border-radius: var(--radius-full);
+  padding: 10px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 10px 25px rgba(227, 27, 35, 0.2);
+  z-index: 40;
+}
+
+.cart-summary-text {
+  font-size: 0.85rem;
+  color: var(--text-main);
+}
+
+.cart-total-amt {
+  color: var(--sokxay-red);
+  font-weight: 800;
+  font-size: 1.05rem;
+}
+
+.cart-checkout-btn {
+  background: var(--sokxay-red);
+  color: #ffffff;
+  border: none;
+  font-size: 0.88rem;
+  font-weight: 800;
+  padding: 8px 18px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+}
+
+/* Bottom Navigation Bar (App Bar) */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  background: #ffffff;
+  border-top: 1px solid var(--border-glass);
+  padding: 8px 12px calc(8px + var(--safe-bottom)) 12px;
+  display: flex;
+  justify-content: space-around;
+  z-index: 50;
+  box-shadow: 0 -4px 10px rgba(0,0,0,0.05);
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  background: none;
+  border: none;
+  color: #94a3b8;
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.nav-item.active {
+  color: var(--sokxay-red);
+}
+
+.nav-item.active svg {
+  stroke: var(--sokxay-red);
+}
+
+.nav-item svg {
+  width: 22px;
+  height: 22px;
+  stroke: #94a3b8;
+  fill: none;
+  stroke-width: 2;
+}
+
+/* Modal Bottom Sheet */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.modal-sheet {
+  width: 100%;
+  max-width: 480px;
+  background: #ffffff;
+  border-top-left-radius: var(--radius-lg);
+  border-top-right-radius: var(--radius-lg);
+  padding: 20px 20px calc(24px + var(--safe-bottom)) 20px;
+  box-shadow: 0 -10px 25px rgba(0,0,0,0.2);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-glass);
+}
+
+.modal-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.close-modal-btn {
+  background: #f1f5f9;
+  border: none;
+  color: var(--text-muted);
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+/* Digital Ticket Slip */
+.ticket-slip {
+  background: #ffffff;
+  color: #1e293b;
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  margin-bottom: 16px;
+  position: relative;
+  border-top: 6px solid var(--sokxay-red);
+}
+
+.ticket-header-logo {
+  text-align: center;
+  margin-bottom: 12px;
+  border-bottom: 1px dashed #cbd5e1;
+  padding-bottom: 10px;
+}
+
+.ticket-company {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--sokxay-red);
+}
+
+.ticket-serial-tag {
+  font-family: monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #64748b;
+}
+
+.ticket-items-list {
+  margin: 12px 0;
+}
+
+.ticket-line-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid #f8fafc;
+  font-size: 0.95rem;
+}
+
+.ticket-num-badge {
+  font-weight: 800;
+  font-family: 'Outfit', monospace;
+  font-size: 1.1rem;
+  color: #0f172a;
+}
+
+.ticket-total-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 2px dashed #94a3b8;
+  font-weight: 800;
+  font-size: 1.1rem;
+}
+
+.barcode-sim {
+  margin-top: 14px;
+  text-align: center;
+  font-family: monospace;
+  letter-spacing: 4px;
+  font-weight: 700;
+  color: #334155;
+}
+
+/* ==========================================================================
+   GAMIFICATION & SUSPENSE UI (ການລຸ້ນໂຊກ)
+   ========================================================================== */
+
+/* 1. Live Drum Roller (ເຄື່ອງໝູນລູກບານ) */
+.drum-roller-container {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin: 20px 0;
+  perspective: 1000px;
+}
+
+.drum-digit-box {
+  width: 48px;
+  height: 64px;
+  background: linear-gradient(145deg, #ffffff, #f1f5f9);
+  border: 2px solid #cbd5e1;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.2rem;
+  font-weight: 900;
+  font-family: 'Outfit', sans-serif;
+  color: var(--text-main);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1), inset 0 2px 4px rgba(255, 255, 255, 0.9);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.drum-digit-box.rolling {
+  border-color: #f59e0b;
+  color: #d97706;
+  animation: drumShake 0.1s infinite alternate;
+  box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
+}
+
+.drum-digit-box.locked {
+  background: linear-gradient(135deg, #e31b23, #b91c1c);
+  border-color: #e31b23;
+  color: #ffffff;
+  transform: scale(1.06);
+  box-shadow: 0 6px 16px rgba(227, 27, 35, 0.4);
+  animation: drumBounce 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes drumShake {
+  0% { transform: translateY(-2px); }
+  100% { transform: translateY(2px); }
+}
+
+@keyframes drumBounce {
+  0% { transform: scale(0.7); opacity: 0.5; }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1.06); opacity: 1; }
+}
+
+/* 2. Confetti & Particle Canvas Overlay */
+.confetti-canvas-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* 3. Big Win Celebration Popup */
+.big-win-badge {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: white;
+  padding: 8px 20px;
+  border-radius: 99px;
+  font-weight: 900;
+  font-size: 1.1rem;
+  display: inline-block;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 15px rgba(217, 119, 6, 0.4);
+  animation: pulseGold 1.5s infinite;
+}
+
+.big-win-amount {
+  font-size: 2.4rem;
+  font-weight: 900;
+  font-family: 'Outfit', sans-serif;
+  color: #059669;
+  text-shadow: 0 2px 10px rgba(5, 150, 105, 0.2);
+  margin: 10px 0;
+}
+
+/* 4. Digital Scratch Card */
+.scratch-card-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 340px;
+  margin: 0 auto;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  border: 3px solid #e2e8f0;
+  background: #ffffff;
+  touch-action: none;
+  user-select: none;
+}
+
+.scratch-card-underlay {
+  padding: 24px 16px;
+  text-align: center;
+  background: linear-gradient(135deg, #fffbeb, #fef3c7);
+}
+
+.scratch-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  cursor: crosshair;
+}
+
+/* 5. Lucky Wheel */
+.lucky-wheel-container {
+  position: relative;
+  width: 280px;
+  height: 280px;
+  margin: 20px auto;
+}
+
+.wheel-pointer {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 14px solid transparent;
+  border-right: 14px solid transparent;
+  border-top: 26px solid var(--sokxay-red);
+  z-index: 10;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+
+.wheel-disc {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+  transition: transform 4s cubic-bezier(0.15, 0.9, 0.25, 1);
+}
+
