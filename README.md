@@ -74,3 +74,25 @@ python run.py
 - `backend/sql/02_audit_triggers.sql`: PostgreSQL Triggers ບັນທຶກ Mutation Logs ແບບ Immutable ສຳລັບການກວດສອບພາຍໃນ.
 - `backend/app/etl/etl_legacy_data.py`: ສະຄຣິບ Pandas ETL ດຶງຂໍ້ມູນເກົ່າເຂົ້າ `staging` ກ່ອນຍ້າຍເຂົ້າ `production`.
 - `backend/app/services/storage_service.py`: Service Class ສຳລັບຈັດການ Cloud Storage (S3 / GCS / Local) ພ້ອມ Presigned URLs.
+
+---
+
+## 🚀 ສຳລັບນັກພັດທະນາ (Developer Hand-off Guide)
+
+ສຳລັບນັກພັດທະນາ (Backend/DevOps) ທີ່ຈະມາຮັບຊ່ວງຕໍ່ ເພື່ອເອົາລະບົບຂຶ້ນ Production (ເຊັ່ນ Render.com ຫຼື VPS), ໃຫ້ປະຕິບັດຕາມນີ້:
+
+1. **ສ້າງໄຟລ໌ Environment Variables**:
+   - ກັອບປີ້ໄຟລ໌ `backend/.env.example` ປ່ຽນຊື່ເປັນ `backend/.env`.
+   - ຕື່ມ `DATABASE_URL` (ຕ້ອງເປັນ PostgreSQL), ແລະ ຂໍ້ມູນ Cloudflare R2 / AWS S3 ໃຫ້ຄົບຖ້ວນ.
+
+2. **ຕິດຕັ້ງຖານຂໍ້ມູນ (Database Initialization)**:
+   - ເນື່ອງຈາກລະບົບຮຽກຮ້ອງ Immutable Audit ຜ່ານ Database Triggers, ເຮົາຈຳເປັນຕ້ອງໃຊ້ PostgreSQL.
+   - ໃຫ້ລັນສະຄຣິບ: `python backend/init_db.py` ເພື່ອທຳການສ້າງ Schemas, ຕາຕະລາງ ແລະ Triggers ຕ່າງໆແບບອັດຕະໂນມັດ (ອ່ານໂຄດຈາກ `sql/01_schemas.sql` ແລະ `sql/02_audit_triggers.sql`).
+
+3. **ອັບເດດ URL ໜ້າ Frontend**:
+   - ຢ່າລືມເຂົ້າໄປແກ້ໄຂໄຟລ໌ `frontend/src/services/api.js` ປ່ຽນຄ່າ `API_BASE` ໃຫ້ຊີ້ໄປຫາ URL ຂອງ Backend Server ທີ່ທ່ານ Deploy ແລ້ວ.
+
+**Tech Stack Requirements (Production)**:
+- Python 3.10+ (FastAPI, SQLAlchemy, Pandas)
+- PostgreSQL 14+ (ຮອງຮັບ JSONB & Triggers)
+- S3-Compatible Storage (AWS S3, Cloudflare R2, ຫລື MinIO)
