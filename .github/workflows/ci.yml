@@ -100,9 +100,21 @@ jobs:
           echo "$KEYSTORE_B64" | base64 -d > android/app/release.jks
           printf 'storeFile=release.jks\nstorePassword=%s\nkeyAlias=%s\nkeyPassword=%s\n' "$STORE_PASSWORD" "$KEY_ALIAS" "$KEY_PASSWORD" > android/key.properties
       - name: Build APK
-        run: flutter build apk --release --dart-define=API_BASE_URL=${{ vars.API_BASE_URL || 'https://api.example.la/v1' }}
+        run: |
+          flutter build apk --release --dart-define=API_BASE_URL=${{ vars.API_BASE_URL || 'https://api.example.la/v1' }}
+          cp build/app/outputs/flutter-apk/app-release.apk build/lao-lottery.apk
+      # ສະບັບສາທິດ: ໃຊ້ backend ຈຳລອງໃນແອັບ ບໍ່ຕ້ອງມີເຊີບເວີ (ສຳລັບນຳສະເໜີນັກລົງທຶນ)
+      - name: Build demo APK
+        run: |
+          flutter build apk --release --dart-define=DEMO_MODE=true
+          cp build/app/outputs/flutter-apk/app-release.apk build/lao-lottery-demo.apk
       - uses: actions/upload-artifact@v4
         with:
           name: lao-lottery-apk
-          path: mobile/build/app/outputs/flutter-apk/app-release.apk
+          path: mobile/build/lao-lottery.apk
           retention-days: 30
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lao-lottery-demo-apk
+          path: mobile/build/lao-lottery-demo.apk
+          retention-days: 90
