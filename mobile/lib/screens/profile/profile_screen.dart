@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 
 import '../../api/api_exception.dart';
 import '../../api/lottery_api.dart';
+import '../../demo/demo_mode.dart';
+import '../../demo/demo_widgets.dart';
 import '../../l10n/strings.dart';
 import '../../models/models.dart';
 import '../../state/app_data.dart';
@@ -166,6 +168,10 @@ class ProfileScreen extends StatelessWidget {
               ],
             ),
           ),
+          if (context.read<DemoController?>() != null) ...[
+            const SizedBox(height: 12),
+            const DemoToolsCard(),
+          ],
           const SizedBox(height: 12),
           Card(
             clipBehavior: Clip.antiAlias,

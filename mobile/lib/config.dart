@@ -17,7 +17,11 @@ abstract final class AppConfig {
     return value.endsWith('/') ? value.substring(0, value.length - 1) : value;
   }
 
-  /// Development helpers (OTP code banner, simulated deposits) are only shown
-  /// in debug builds.
-  static const bool devTools = kDebugMode;
+  /// Offline investor demo: `--dart-define=DEMO_MODE=true` runs the app
+  /// against an in-process fake backend (lib/demo/). No server, no network.
+  static const bool demoMode = bool.fromEnvironment('DEMO_MODE');
+
+  /// Development helpers (simulated deposits) are shown in debug builds and
+  /// in the demo build.
+  static const bool devTools = kDebugMode || demoMode;
 }

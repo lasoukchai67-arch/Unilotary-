@@ -42,7 +42,7 @@ class PinField extends StatelessWidget {
       controller: controller,
       autofocus: autofocus,
       obscureText: true,
-      obscuringCharacter: '●',
+      obscuringCharacter: '•',
       keyboardType: TextInputType.number,
       textInputAction: textInputAction,
       maxLength: 6,

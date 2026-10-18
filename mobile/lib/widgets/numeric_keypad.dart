@@ -3,23 +3,26 @@ import 'package:flutter/material.dart';
 import '../l10n/strings.dart';
 import '../theme.dart';
 
-/// 3×4 on-screen keypad: digits, clear and backspace. Keys are 52 px tall
-/// (above the 48 px minimum tap target).
+/// 3×4 on-screen keypad: digits, clear and backspace. Keys are [keyHeight]
+/// tall (never below the 48 px minimum tap target).
 class NumericKeypad extends StatelessWidget {
   const NumericKeypad({
     super.key,
     required this.onDigit,
     required this.onBackspace,
     required this.onClear,
-  });
+    this.keyHeight = 52,
+  }) : assert(keyHeight >= 48);
 
   final ValueChanged<String> onDigit;
   final VoidCallback onBackspace;
   final VoidCallback onClear;
+  final double keyHeight;
 
   @override
   Widget build(BuildContext context) {
     Widget digit(String d) => _Key(
+          height: keyHeight,
           label: d,
           semanticLabel: d,
           onTap: () => onDigit(d),
@@ -40,7 +43,8 @@ class NumericKeypad extends StatelessWidget {
       [digit('7'), digit('8'), digit('9')],
       [
         _Key(
-          label: 'C',
+          height: keyHeight,
+          label: 'clear',
           semanticLabel: S.clearNumber,
           onTap: onClear,
           child: const Text(
@@ -54,7 +58,8 @@ class NumericKeypad extends StatelessWidget {
         ),
         digit('0'),
         _Key(
-          label: '⌫',
+          height: keyHeight,
+          label: 'back',
           semanticLabel: S.backspace,
           onTap: onBackspace,
           child: const Icon(Icons.backspace_outlined, color: Brand.grey),
@@ -83,12 +88,14 @@ class NumericKeypad extends StatelessWidget {
 
 class _Key extends StatelessWidget {
   const _Key({
+    required this.height,
     required this.label,
     required this.semanticLabel,
     required this.onTap,
     required this.child,
   });
 
+  final double height;
   final String label;
   final String semanticLabel;
   final VoidCallback onTap;
@@ -108,7 +115,7 @@ class _Key extends StatelessWidget {
           borderRadius: BorderRadius.circular(14),
           onTap: onTap,
           child: Container(
-            height: 52,
+            height: height,
             alignment: Alignment.center,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(14),

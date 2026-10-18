@@ -23,6 +23,7 @@ lib/
   widgets/    keypad, digit tiles, money text, countdown, PIN dialog, paged list...
   utils/      kip/date formatting, phone normalisation, permutations, winning tiers
   l10n/strings.dart   all Lao text
+  demo/       offline demo: in-memory backend, banner, demo tools (DEMO_MODE only)
 assets/fonts/ Noto Sans Lao (SIL OFL 1.1, see OFL.txt) — bundled, never downloaded
 test/         API client tests (MockClient), unit tests, widget tests
 ```
@@ -136,6 +137,45 @@ Capabilities* for bundle id `la.lottery.lao_lottery`, and use automatic
 signing (or install the distribution certificate and provisioning profile
 in CI). Camera and photo-library permission texts (`NSCameraUsageDescription`,
 `NSPhotoLibraryUsageDescription`) are in Lao in `ios/Runner/Info.plist`.
+
+## ໂໝດສາທິດ (ອອບລາຍ) · Offline demo mode
+
+ສຳລັບນຳສະເໜີນັກລົງທຶນ: ແອັບທັງໝົດເຮັດວຽກໄດ້ໂດຍບໍ່ຕ້ອງມີເຊີບເວີ. ຂໍ້ມູນເປັນຕົວຢ່າງ ບໍ່ແມ່ນເງິນແທ້.
+For investor demos: every screen works with no server. All data is sample
+data, not real money.
+
+```bash
+# Phone / emulator
+flutter run --dart-define=DEMO_MODE=true
+
+# Web demo (no network requests at runtime) → build/web
+tool/build_demo_web.sh                      # or FLUTTER=/path/to/flutter tool/build_demo_web.sh
+npx http-server build/web -p 8080           # any static server
+
+# Optional end-to-end check in headless Chromium (Playwright)
+PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers NODE_PATH="$(npm root -g)" \
+  node tool/demo_web_check.mjs build/web /tmp/demo-shots
+```
+
+- **Login**: any Lao mobile number logs in as a verified customer with
+  500,000 ກີບ, 3 past tickets (one won and paid, two lost) and a few
+  notifications. **020 9999 9999** logs in as an agent (ຂາຍແທນລູກຄ້າ,
+  5 % commission). The OTP code is shown on screen.
+- **Profile → ເຄື່ອງມືສາທິດ**: *ອອກຜົນງວດນີ້ (ສາທິດ)* closes the current
+  draw with a result that makes your latest ticket line win, settles all
+  tickets (prizes over 5,000,000 ກີບ wait for approval), credits agent
+  commission and opens the next draw; *ເຕີມເງິນສາທິດ 1,000,000 ກີບ*;
+  *ລ້າງຂໍ້ມູນສາທິດ* resets everything.
+- Numbers **99** (sold out), **68** (40,000 ກີບ left) and **13** (closed) show
+  the per-number limits. Deposits complete with the simulate buttons;
+  withdrawals are paid after ~4 s; draws close Mon/Wed/Fri 20:00 (Vientiane).
+- A thin banner "ໂໝດສາທິດ · ຂໍ້ມູນຕົວຢ່າງ ບໍ່ແມ່ນເງິນແທ້" is always shown.
+- Data lives in memory (lib/demo/demo_backend.dart) and is reset when the
+  app or page is reloaded. Normal builds do not include the demo backend.
+- `tool/build_demo_web.sh` builds with `--no-web-resources-cdn` (CanvasKit and
+  fonts bundled) and then `tool/patch_demo_web.dart` removes Flutter's service
+  worker, points font fallback to a local path, sets the demo title and the
+  mint background.
 
 ## ໝາຍເຫດ · Notes
 

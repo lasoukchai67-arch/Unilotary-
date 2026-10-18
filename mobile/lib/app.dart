@@ -3,6 +3,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
 import 'api/lottery_api.dart';
+import 'demo/demo_mode.dart';
+import 'demo/demo_widgets.dart';
 import 'l10n/strings.dart';
 import 'screens/auth/phone_screen.dart';
 import 'screens/auth/set_pin_screen.dart';
@@ -15,16 +17,19 @@ import 'state/events.dart';
 import 'theme.dart';
 
 /// Root widget. The [api] is injected so tests can use a mock HTTP client.
+/// [demo] is only set in the offline demo build.
 class LotteryApp extends StatelessWidget {
-  const LotteryApp({super.key, required this.api});
+  const LotteryApp({super.key, required this.api, this.demo});
 
   final LotteryApi api;
+  final DemoController? demo;
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
         Provider<LotteryApi>.value(value: api),
+        Provider<DemoController?>.value(value: demo),
         ChangeNotifierProvider(create: (_) => AuthState(api)..init()),
         ChangeNotifierProvider(create: (_) => WalletState(api)),
         ChangeNotifierProvider(create: (_) => DrawState(api)),
@@ -49,6 +54,7 @@ class _AppViewState extends State<_AppView> {
   final _navigatorKey = GlobalKey<NavigatorState>();
   final _messengerKey = GlobalKey<ScaffoldMessengerState>();
   late final AuthState _auth;
+  late final DemoController? _demo;
   AuthStatus? _lastStatus;
 
   @override
@@ -56,12 +62,26 @@ class _AppViewState extends State<_AppView> {
     super.initState();
     _auth = context.read<AuthState>();
     _auth.addListener(_onAuthChanged);
+    _demo = context.read<DemoController?>();
+    _demo?.backend.changes.addListener(_onDemoChanged);
   }
 
   @override
   void dispose() {
     _auth.removeListener(_onAuthChanged);
+    _demo?.backend.changes.removeListener(_onDemoChanged);
     super.dispose();
+  }
+
+  /// Demo backend changed in the background (KYC approved, withdrawal paid,
+  /// draw settled...): reload what the screens show.
+  void _onDemoChanged() {
+    if (_auth.status != AuthStatus.signedIn) return;
+    _auth.refreshUser().catchError((_) {});
+    context.read<WalletState>().refresh();
+    context.read<DrawState>().refresh();
+    context.read<NotificationState>().refresh();
+    context.read<TicketEvents>().changed();
   }
 
   void _onAuthChanged() {
@@ -91,7 +111,7 @@ class _AppViewState extends State<_AppView> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: S.appName,
+      title: _demo == null ? S.appName : S.demoAppTitle,
       debugShowCheckedModeBanner: false,
       navigatorKey: _navigatorKey,
       scaffoldMessengerKey: _messengerKey,
@@ -99,6 +119,9 @@ class _AppViewState extends State<_AppView> {
       locale: const Locale('lo'),
       supportedLocales: const [Locale('lo'), Locale('en')],
       localizationsDelegates: GlobalMaterialLocalizations.delegates,
+      builder: _demo == null
+          ? null
+          : (context, child) => DemoFrame(child: child ?? const SizedBox()),
       home: const AuthGate(),
     );
   }

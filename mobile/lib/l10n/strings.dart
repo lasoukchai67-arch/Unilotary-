@@ -285,6 +285,34 @@ abstract final class S {
   static const agentSell = 'ຂາຍ ແລະ ອອກບິນ';
   static const agentPaidFromWallet = 'ຕັດເງິນຈາກກະເປົາຂອງຕົວແທນ';
 
+  // Demo mode (--dart-define=DEMO_MODE=true)
+  static const demoAppTitle = 'ຫວຍພັດທະນາ · ສາທິດ';
+  static const demoBanner = 'ໂໝດສາທິດ · ຂໍ້ມູນຕົວຢ່າງ ບໍ່ແມ່ນເງິນແທ້';
+  static const demoLoginHint =
+      'ໂໝດສາທິດ: ໃສ່ເບີໂທໃດກໍໄດ້ ເພື່ອເຂົ້າເປັນລູກຄ້າ. ລະຫັດ OTP ຈະສະແດງໃຫ້ເຫັນ.';
+  static const demoAgentHint = 'ເຂົ້າເປັນຕົວແທນ:';
+  static const demoAgentPhone = '020 9999 9999';
+  static const demoTools = 'ເຄື່ອງມືສາທິດ';
+  static const demoSettle = 'ອອກຜົນງວດນີ້ (ສາທິດ)';
+  static const demoSettleHint = 'ປິດງວດ, ອອກເລກ, ຈ່າຍລາງວັນ ແລະ ເປີດງວດໃໝ່';
+  static const demoTopUp = 'ເຕີມເງິນສາທິດ 1,000,000 ກີບ';
+  static const demoTopUpHint = 'ເງິນຕົວຢ່າງ ບໍ່ແມ່ນເງິນແທ້';
+  static const demoToppedUp = 'ເພີ່ມເງິນສາທິດ 1,000,000 ກີບ ແລ້ວ';
+  static const demoReset = 'ລ້າງຂໍ້ມູນສາທິດ';
+  static const demoResetHint = 'ເລີ່ມໃໝ່ຈາກຂໍ້ມູນຕົວຢ່າງ';
+  static const demoResetConfirm =
+      'ລຶບຂໍ້ມູນທັງໝົດໃນໂໝດສາທິດ ແລະ ເລີ່ມໃໝ່? ທ່ານຈະອອກຈາກລະບົບ.';
+  static String demoSettleTitle(String drawNo) => 'ງວດທີ $drawNo ອອກຜົນແລ້ວ';
+  static String demoYouWon(String amount) =>
+      'ທ່ານຖືກລາງວັນ $amount — ໂອນເຂົ້າກະເປົາແລ້ວ';
+  static String demoYouWonPending(String amount) =>
+      'ທ່ານຖືກລາງວັນ $amount — ຍອດໃຫຍ່ ລໍຖ້າກວດສອບກ່ອນໂອນ';
+  static const demoNoTickets = 'ທ່ານບໍ່ມີບິນໃນງວດນີ້';
+  static const demoYouLost = 'ບິນຂອງທ່ານບໍ່ຖືກລາງວັນ';
+  static String demoWinners(int n, String total) =>
+      'ບິນທີ່ຖືກລາງວັນ: $n · ລວມ $total';
+  static String demoNextDraw(String no) => 'ເປີດຂາຍງວດທີ $no ແລ້ວ';
+
   // Responsible gaming
   static const rgNotice =
       'ສະເພາະຜູ້ມີອາຍຸ 18 ປີຂຶ້ນໄປ · ຫຼິ້ນຢ່າງມີສະຕິ ແລະ ພໍປະມານ';

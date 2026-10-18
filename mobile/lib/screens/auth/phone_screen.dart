@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../api/api_exception.dart';
+import '../../demo/demo_mode.dart';
+import '../../demo/demo_widgets.dart';
 import '../../l10n/strings.dart';
 import '../../state/auth_state.dart';
 import '../../theme.dart';
@@ -116,6 +118,13 @@ class _PhoneScreenState extends State<PhoneScreen> {
                             )
                           : const Text(S.requestOtp),
                     ),
+                    if (context.read<DemoController?>() != null) ...[
+                      const SizedBox(height: 16),
+                      DemoLoginHint(
+                        onUseAgentPhone: () =>
+                            _phone.text = S.demoAgentPhone,
+                      ),
+                    ],
                     const SizedBox(height: 32),
                     const ResponsibleGamingFooter(),
                   ],

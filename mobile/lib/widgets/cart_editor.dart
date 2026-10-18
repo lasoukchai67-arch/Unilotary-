@@ -63,7 +63,8 @@ class CartEditor extends StatelessWidget {
             ? rules.firstWhere((r) => r.digits == input.length)
             : null;
         // Compact so number, keypad, amount and both buttons fit on a
-        // 360×740 phone without scrolling.
+        // 360×740 phone without scrolling (smaller still on short screens).
+        final short = MediaQuery.sizeOf(context).height < 760;
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -78,7 +79,7 @@ class CartEditor extends StatelessWidget {
                         input,
                         key: const ValueKey('number-input'),
                         slots: 6,
-                        size: 38,
+                        size: short ? 34 : 38,
                         semanticLabel: input.isEmpty
                             ? S.enterNumber
                             : input.split('').join(' '),
@@ -111,6 +112,7 @@ class CartEditor extends StatelessWidget {
                       onDigit: cart.typeDigit,
                       onBackspace: cart.backspace,
                       onClear: cart.clearInput,
+                      keyHeight: short ? 48 : 52,
                     ),
                   ],
                 ),

@@ -312,8 +312,9 @@ class _DrawBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final short = MediaQuery.sizeOf(context).height < 760;
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      padding: EdgeInsets.symmetric(horizontal: 14, vertical: short ? 6 : 10),
       decoration: BoxDecoration(
         color: Brand.deepGreen,
         borderRadius: BorderRadius.circular(14),

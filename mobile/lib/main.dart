@@ -7,6 +7,7 @@ import 'api/lottery_api.dart';
 import 'api/token_store.dart';
 import 'app.dart';
 import 'config.dart';
+import 'demo/demo_mode.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,8 +18,11 @@ void main() {
     yield LicenseEntryWithLineBreaks(const ['Noto Sans Lao'], text);
   });
 
-  final api = LotteryApi(
-    ApiClient(baseUrl: AppConfig.apiBaseUrl, tokenStore: SecureTokenStore()),
-  );
-  runApp(LotteryApp(api: api));
+  // Demo builds answer every request in-process; normal builds are unchanged.
+  final demo = AppConfig.demoMode ? DemoController() : null;
+  final api = demo?.createApi() ??
+      LotteryApi(
+        ApiClient(baseUrl: AppConfig.apiBaseUrl, tokenStore: SecureTokenStore()),
+      );
+  runApp(LotteryApp(api: api, demo: demo));
 }
