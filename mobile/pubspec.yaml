@@ -1,0 +1,54 @@
+name: lao_lottery
+description: "ແອັບລູກຄ້າ ຫວຍພັດທະນາ (Lao Development Lottery customer app)."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.13.5
+
+dependencies:
+  cupertino_icons: ^2.0.0
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  flutter_secure_storage: ^11.2.0
+  http: ^1.6.0
+  http_parser: ^4.1.2
+  image_picker: ^1.2.4
+  intl: ^0.20.3
+  provider: ^6.1.5+1
+  qr_flutter: ^4.1.0
+  share_plus: ^13.3.1
+  uuid: ^4.6.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/fonts/OFL.txt
+
+  # Noto Sans Lao (SIL Open Font License 1.1, see assets/fonts/OFL.txt).
+  # The Lao files only contain Lao glyphs, so the Latin subset of the same
+  # font project is bundled as a fallback family for digits and Latin text.
+  # Nothing is downloaded at runtime.
+  fonts:
+    - family: NotoSansLao
+      fonts:
+        - asset: assets/fonts/NotoSansLao-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/NotoSansLao-Bold.ttf
+          weight: 700
+    - family: NotoSansLaoLatin
+      fonts:
+        - asset: assets/fonts/NotoSansLaoLatin-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/NotoSansLaoLatin-Bold.ttf
+          weight: 700

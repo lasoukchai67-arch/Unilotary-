@@ -1,0 +1,63 @@
+# Flutter / Dart  (pubspec.lock IS committed: this is an app)
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+/build/
+/coverage/
+**/doc/api/
+.widget_preview/
+migrate_working_dir/
+
+# Symbols / obfuscation maps from release builds
+app.*.symbols
+app.*.map.json
+*.symbols
+
+# Signing material and secrets: never commit
+android/key.properties
+**/*.keystore
+**/*.jks
+**/*.p12
+**/*.mobileprovision
+*.env
+.env*
+
+# Android
+/android/app/debug
+/android/app/profile
+/android/app/release
+android/local.properties
+android/.gradle/
+android/captures/
+android/.cxx/
+
+# iOS
+ios/Pods/
+ios/.symlinks/
+ios/Flutter/.last_build_id
+ios/Flutter/Generated.xcconfig
+ios/Flutter/flutter_export_environment.sh
+ios/Flutter/ephemeral/
+**/xcuserdata/
+**/DerivedData/
+
+# IDEs and OS files
+*.iml
+*.ipr
+*.iws
+.idea/
+.vscode/
+.history
+.atom/
+.build/
+.buildlog/
+.swiftpm/
+.svn/
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
