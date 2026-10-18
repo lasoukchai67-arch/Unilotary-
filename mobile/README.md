@@ -93,6 +93,10 @@ flutter build ipa --release --dart-define=API_BASE_URL=https://api.example.la/v1
 flutter build web --release --dart-define=API_BASE_URL=https://api.example.la/v1
 ```
 
+By default Flutter web loads its CanvasKit runtime from Google's CDN. To
+serve everything from your own host, add `--no-web-resources-cdn`. App fonts
+are always bundled.
+
 Outputs: `build/app/outputs/flutter-apk/app-release.apk`,
 `build/app/outputs/bundle/release/app-release.aab`, `build/ios/ipa/`,
 `build/web/`.

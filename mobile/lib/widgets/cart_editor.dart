@@ -62,48 +62,51 @@ class CartEditor extends StatelessWidget {
         final rule = validLength
             ? rules.firstWhere((r) => r.digits == input.length)
             : null;
+        // Compact so number, keypad, amount and both buttons fit on a
+        // 360×740 phone without scrolling.
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Card(
               child: Padding(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.fromLTRB(12, 12, 12, 8),
                 child: Column(
                   children: [
-                    const Text(
-                      S.enterNumber,
-                      style: TextStyle(color: Brand.grey),
-                    ),
-                    const SizedBox(height: 10),
                     FittedBox(
                       fit: BoxFit.scaleDown,
                       child: DigitTiles(
                         input,
                         key: const ValueKey('number-input'),
                         slots: 6,
-                        size: 42,
+                        size: 38,
                         semanticLabel: input.isEmpty
                             ? S.enterNumber
                             : input.split('').join(' '),
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 4),
                     SizedBox(
                       height: 22,
-                      child: rule == null
-                          ? null
-                          : Text(
-                              '${S.digitsLabel(rule.digits)} · '
-                              '${S.payoutLabel(rule.payoutRate)} · '
-                              '${S.amountBelowMin(formatAmountShort(rule.minAmount))}',
-                              style: const TextStyle(
-                                color: Brand.midGreen,
-                                fontWeight: FontWeight.w700,
-                                fontFeatures: tabular,
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: rule == null
+                            ? const Text(
+                                S.enterNumber,
+                                style: TextStyle(color: Brand.grey),
+                              )
+                            : Text(
+                                '${S.digitsLabel(rule.digits)} · '
+                                '${S.payoutLabel(rule.payoutRate)} · '
+                                '${S.amountBelowMin(formatAmountShort(rule.minAmount))}',
+                                style: const TextStyle(
+                                  color: Brand.midGreen,
+                                  fontWeight: FontWeight.w700,
+                                  fontFeatures: tabular,
+                                ),
                               ),
-                            ),
+                      ),
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 4),
                     NumericKeypad(
                       onDigit: cart.typeDigit,
                       onBackspace: cart.backspace,
@@ -113,9 +116,9 @@ class CartEditor extends StatelessWidget {
                 ),
               ),
             ),
-            const SectionTitle(S.amount),
+            const SizedBox(height: 10),
             _AmountSelector(cart: cart),
-            const SizedBox(height: 12),
+            const SizedBox(height: 10),
             Row(
               children: [
                 Expanded(
@@ -141,7 +144,7 @@ class CartEditor extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
             _CartList(cart: cart, rules: rules),
           ],
         );
@@ -163,31 +166,47 @@ class _AmountSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isCustom = !amountPresets.contains(cart.amount);
-    return Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      children: [
-        for (final a in amountPresets)
+    // One horizontally scrolling row instead of wrapping onto two lines.
+    return SizedBox(
+      height: 48,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        children: [
+          const Padding(
+            padding: EdgeInsets.only(left: 4, right: 8),
+            child: Center(
+              child: Text(
+                S.amount,
+                style: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  color: Brand.deepGreen,
+                ),
+              ),
+            ),
+          ),
+          for (final a in amountPresets)
+            Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: ChoiceChip(
+                key: ValueKey('amount-$a'),
+                label: Text(formatAmountShort(a)),
+                selected: cart.amount == a,
+                showCheckmark: false,
+                onSelected: (_) => cart.setAmount(a),
+              ),
+            ),
           ChoiceChip(
-            key: ValueKey('amount-$a'),
-            label: Text(formatAmountShort(a)),
-            selected: cart.amount == a,
+            key: const ValueKey('amount-custom'),
+            label: Text(
+              isCustom ? formatAmountShort(cart.amount) : S.customAmount,
+            ),
+            avatar: const Icon(Icons.edit_rounded, size: 18),
+            selected: isCustom,
             showCheckmark: false,
-            onSelected: (_) => cart.setAmount(a),
+            onSelected: (_) => _custom(context),
           ),
-        ChoiceChip(
-          key: const ValueKey('amount-custom'),
-          label: Text(
-            isCustom
-                ? formatAmountShort(cart.amount)
-                : S.customAmount,
-          ),
-          avatar: const Icon(Icons.edit_rounded, size: 18),
-          selected: isCustom,
-          showCheckmark: false,
-          onSelected: (_) => _custom(context),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

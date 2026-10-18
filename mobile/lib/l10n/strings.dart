@@ -266,6 +266,11 @@ abstract final class S {
   static const logoutConfirm = 'ຕ້ອງການອອກຈາກລະບົບບໍ?';
   static const agentSales = 'ຂາຍແທນລູກຄ້າ';
   static const role = 'ປະເພດບັນຊີ';
+  static const roleCustomer = 'ລູກຄ້າ';
+  static const roleAgent = 'ຕົວແທນຈຳໜ່າຍ';
+  static const roleAdmin = 'ຜູ້ດູແລລະບົບ';
+  static const roleFinance = 'ການເງິນ';
+  static const roleAuditor = 'ຜູ້ກວດສອບ';
   static const licenses = 'ໃບອະນຸຍາດຊອບແວ';
   static const markAllRead = 'ອ່ານທັງໝົດແລ້ວ';
   static const noNotifications = 'ບໍ່ມີແຈ້ງເຕືອນ';

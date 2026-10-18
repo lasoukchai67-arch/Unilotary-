@@ -836,6 +836,7 @@ textarea.input {
 
 /* ---------- Tables ---------- */
 .table-wrap {
+  position: relative; /* contain absolutely positioned children (.sr-only labels) inside the scroller */
   width: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;

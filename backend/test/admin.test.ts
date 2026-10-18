@@ -58,7 +58,8 @@ describe('KYC', () => {
     // ລູກຄ້າຄົນອື່ນເບິ່ງບໍ່ໄດ້
     assert.equal((await env.app.inject({ method: 'GET', url: `/v1/admin/kyc/${u.id}/document`, headers: u.headers })).statusCode, 403);
 
-    const ok = await env.app.inject({ method: 'POST', url: `/v1/admin/kyc/${u.id}/approve`, headers: admin.headers, payload: {} });
+    // ບໍ່ສົ່ງ body (ຄືກັບປຸ່ມອະນຸມັດໃນເວັບແອັດມິນ) ຕ້ອງຜ່ານ
+    const ok = await env.app.inject({ method: 'POST', url: `/v1/admin/kyc/${u.id}/approve`, headers: admin.headers });
     assert.equal(ok.json().kyc, 'verified');
     assert.equal((await buy(env, u, drawId, [{ number: '27', amount: 1_000 }])).statusCode, 201);
   });

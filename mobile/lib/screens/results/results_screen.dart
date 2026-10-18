@@ -234,6 +234,11 @@ class _CheckCardState extends State<_CheckCard> {
                     ),
                     decoration: InputDecoration(
                       hintText: S.checkHint,
+                      hintStyle: const TextStyle(
+                        letterSpacing: 0,
+                        fontSize: 15,
+                        color: Brand.grey,
+                      ),
                       counterText: '',
                       errorText: _error,
                     ),

@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import '../l10n/strings.dart';
 import '../theme.dart';
 
-/// 3×4 on-screen keypad: digits, clear and backspace. Keys are ≥ 56 px tall.
+/// 3×4 on-screen keypad: digits, clear and backspace. Keys are 52 px tall
+/// (above the 48 px minimum tap target).
 class NumericKeypad extends StatelessWidget {
   const NumericKeypad({
     super.key,
@@ -42,7 +43,14 @@ class NumericKeypad extends StatelessWidget {
           label: 'C',
           semanticLabel: S.clearNumber,
           onTap: onClear,
-          child: const Icon(Icons.clear_all_rounded, color: Brand.grey),
+          child: const Text(
+            'C',
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.w700,
+              color: Brand.grey,
+            ),
+          ),
         ),
         digit('0'),
         _Key(
@@ -58,7 +66,7 @@ class NumericKeypad extends StatelessWidget {
       children: [
         for (final row in rows)
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 4),
+            padding: const EdgeInsets.symmetric(vertical: 3),
             child: Row(
               children: [
                 for (var i = 0; i < row.length; i++) ...[
@@ -100,7 +108,7 @@ class _Key extends StatelessWidget {
           borderRadius: BorderRadius.circular(14),
           onTap: onTap,
           child: Container(
-            height: 56,
+            height: 52,
             alignment: Alignment.center,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(14),

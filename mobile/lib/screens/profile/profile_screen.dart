@@ -23,6 +23,14 @@ import 'notifications_screen.dart';
 /// Self-exclusion periods offered to the user.
 const selfExclusionOptions = [1, 7, 30, 90];
 
+String _roleLabel(UserRole role) => switch (role) {
+      UserRole.customer => S.roleCustomer,
+      UserRole.agent => S.roleAgent,
+      UserRole.admin => S.roleAdmin,
+      UserRole.finance => S.roleFinance,
+      UserRole.auditor => S.roleAuditor,
+    };
+
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
@@ -72,7 +80,7 @@ class ProfileScreen extends StatelessWidget {
                         ),
                         if (user.role != UserRole.customer)
                           Text(
-                            '${S.role}: ${user.role.name}',
+                            '${S.role}: ${_roleLabel(user.role)}',
                             style: const TextStyle(color: Brand.grey),
                           ),
                       ],

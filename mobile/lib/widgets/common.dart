@@ -19,6 +19,8 @@ void showSnack(BuildContext context, String message, {bool error = false}) {
       SnackBar(
         content: Text(message),
         backgroundColor: error ? Brand.red : Brand.text,
+        // Info messages are brief so they do not sit on the pay bar.
+        duration: Duration(seconds: error ? 4 : 2),
       ),
     );
 }

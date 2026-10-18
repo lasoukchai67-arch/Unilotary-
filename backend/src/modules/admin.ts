@@ -114,7 +114,8 @@ export function adminRoutes(app: FastifyInstance, ctx: Ctx) {
         schema: {
           tags: ['admin'],
           params: z.object({ userId: z.coerce.number().int().positive() }),
-          body: decision === 'verified' ? z.object({}).optional() : z.object({ note: z.string().trim().min(2).max(500) }),
+          // ບໍ່ສົ່ງ body ມາ → fastify ໃຫ້ null, ສະນັ້ນຕ້ອງຍອມຮັບ nullish
+          body: decision === 'verified' ? z.object({}).nullish() : z.object({ note: z.string().trim().min(2).max(500) }),
         },
       },
       async (req) => {

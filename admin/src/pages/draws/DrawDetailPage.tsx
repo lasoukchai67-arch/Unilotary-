@@ -201,9 +201,12 @@ function DrawActions({ draw }: { draw: AdminDraw }) {
           onCancel={() => setAction(null)}
         >
           <p>
-            {action === 'open'
-              ? 'ລູກຄ້າຈະສາມາດຊື້ຫວຍງວດນີ້ໄດ້ທັນທີ.'
-              : 'ລູກຄ້າຈະບໍ່ສາມາດຊື້ຫວຍງວດນີ້ໄດ້ອີກ ແລະ ສາມາດປ້ອນຜົນໄດ້.'}
+            {action === 'close'
+              ? 'ລູກຄ້າຈະບໍ່ສາມາດຊື້ຫວຍງວດນີ້ໄດ້ອີກ ແລະ ສາມາດປ້ອນຜົນໄດ້.'
+              : Date.parse(draw.salesOpenAt) > Date.now()
+                ? // the API only sells inside [salesOpenAt, salesCloseAt], even when the draw is open
+                  `ລູກຄ້າຈະຊື້ໄດ້ຕັ້ງແຕ່ເວລາເປີດຂາຍທີ່ກຳນົດ ${formatDateTime(draw.salesOpenAt)}.`
+                : 'ລູກຄ້າຈະສາມາດຊື້ຫວຍງວດນີ້ໄດ້ທັນທີ.'}
           </p>
         </ConfirmDialog>
       ) : null}
