@@ -68,9 +68,14 @@ export async function applyPaymentEvent(ctx: Ctx, provider: string, ev: WebhookE
 async function finishWithdrawal(ctx: Ctx, id: number, actorId: number, ip: string) {
   // ຂັ້ນ 1: ລັອກ ແລະ ໝາຍວ່າ approved (ກັນການອະນຸມັດຊ້ຳ)
   const { rows } = await ctx.db.query(
-    `UPDATE withdrawals SET status = 'approved', reviewed_by = $2, updated_at = now() WHERE id = $1 AND status = 'requested' RETURNING *`,
+    `UPDATE withdrawals SET status = 'approved', reviewed_by = $2, updated_at = now()
+      WHERE id = $1 AND status = 'requested' AND user_id <> $2 RETURNING *`,
     [id, actorId],
   );
+  if (!rows[0]) {
+    const { rows: own } = await ctx.db.query('SELECT 1 FROM withdrawals WHERE id = $1 AND user_id = $2', [id, actorId]);
+    if (own[0]) throw new AppError('FORBIDDEN', 'ອະນຸມັດການຖອນເງິນຂອງຕົນເອງບໍ່ໄດ້');
+  }
   const w = rows[0];
   if (!w) throw new AppError('CONFLICT', 'ລາຍການນີ້ຖືກດຳເນີນການແລ້ວ');
   // ຂັ້ນ 2: ໂອນເງິນຜ່ານຜູ້ໃຫ້ບໍລິການ (ຢູ່ນອກ transaction ເພາະເປັນການເອີ້ນພາຍນອກ)

@@ -18,7 +18,9 @@ async function loadRules(db: Db, drawIds: number[]) {
   return by;
 }
 
-function drawView(d: Record<string, any>, rules: any[], admin = false) {
+/** viewer = id ຂອງພະນັກງານທີ່ເບິ່ງ (undefined = ສາທາລະນະ) */
+function drawView(d: Record<string, any>, rules: any[], viewer?: number) {
+  const admin = viewer !== undefined;
   return {
     id: d.id,
     drawNo: d.draw_no,
@@ -38,7 +40,9 @@ function drawView(d: Record<string, any>, rules: any[], admin = false) {
     serverTime: new Date().toISOString(),
     ...(admin
       ? {
-          pendingResult: d.pending_result,
+          // ເລກທີ່ລໍຖ້າຢືນຢັນ ເຫັນໄດ້ສະເພາະຄົນທີ່ປ້ອນ, ຜູ້ຢືນຢັນຕ້ອງພິມເອງ
+          pendingResult: d.result_entered_by === viewer ? d.pending_result : null,
+          hasPendingResult: d.pending_result != null,
           resultEnteredBy: d.result_entered_by,
           stats: { sales: d.sales ?? 0, tickets: d.tickets ?? 0 },
         }
@@ -51,24 +55,25 @@ const ADMIN_SELECT = `
   LEFT JOIN LATERAL (SELECT COALESCE(SUM(total_amount), 0)::bigint AS sales, COUNT(*)::int AS tickets
                        FROM tickets WHERE draw_id = d.id AND status <> 'cancelled') s ON true`;
 
-async function views(db: Db, rows: any[], admin: boolean) {
+async function views(db: Db, rows: any[], viewer?: number) {
   const rules = await loadRules(db, rows.map((r) => r.id));
-  return rows.map((r) => drawView(r, rules.get(r.id) ?? [], admin));
+  return rows.map((r) => drawView(r, rules.get(r.id) ?? [], viewer));
 }
 
-export async function loadAdminDraw(db: Db, id: number) {
+export async function loadAdminDraw(db: Db, id: number, viewer: number) {
   const { rows } = await db.query(`${ADMIN_SELECT} WHERE d.id = $1`, [id]);
   if (!rows[0]) throw notFound('ງວດ');
-  return (await views(db, rows, true))[0];
+  return (await views(db, rows, viewer))[0];
 }
 
-export async function currentDraw(db: Db, admin = false) {
+export async function currentDraw(db: Db, viewer?: number) {
+  const admin = viewer !== undefined;
   const { rows } = await db.query(
     `${admin ? ADMIN_SELECT : 'SELECT d.* FROM draws d'}
       WHERE d.status IN ('open', 'scheduled')
       ORDER BY (d.status = 'open') DESC, d.sales_close_at ASC LIMIT 1`,
   );
-  return rows[0] ? (await views(db, rows, admin))[0] : null;
+  return rows[0] ? (await views(db, rows, viewer))[0] : null;
 }
 
 const ruleSchema = z.object({
@@ -98,14 +103,14 @@ export function drawRoutes(app: FastifyInstance, ctx: Ctx) {
         `SELECT * FROM draws WHERE ($1::draw_status IS NULL OR status = $1) ORDER BY sales_close_at DESC LIMIT $2`,
         [req.query.status ?? null, req.query.limit],
       );
-      return { items: await views(db, rows, false) };
+      return { items: await views(db, rows) };
     },
   );
 
   r.get('/v1/draws/:id', { schema: { tags: ['draws'], params: idParam } }, async (req) => {
     const { rows } = await db.query('SELECT * FROM draws WHERE id = $1', [req.params.id]);
     if (!rows[0]) throw notFound('ງວດ');
-    return (await views(db, rows, false))[0];
+    return (await views(db, rows))[0];
   });
 
   // ---------- admin ----------
@@ -121,13 +126,13 @@ export function drawRoutes(app: FastifyInstance, ctx: Ctx) {
         `${ADMIN_SELECT} WHERE ($1::draw_status IS NULL OR d.status = $1) AND d.id < $2 ORDER BY d.id DESC LIMIT $3`,
         [status ?? null, before ?? BIG, limit],
       );
-      const items = await views(db, rows, true);
+      const items = await views(db, rows, currentUser(req).id);
       return { items, nextBefore: nextBefore(items, limit) };
     },
   );
 
   r.get('/v1/admin/draws/:id', { onRequest: staff, schema: { tags: ['admin'], params: idParam } }, async (req) =>
-    loadAdminDraw(db, req.params.id),
+    loadAdminDraw(db, req.params.id, currentUser(req).id),
   );
 
   r.post(
@@ -169,7 +174,7 @@ export function drawRoutes(app: FastifyInstance, ctx: Ctx) {
         await audit(c, { actorId: me.id, action: 'draw.create', entity: 'draws', entityId: rows[0].id, after: b, ip: req.ip });
         return rows[0].id as number;
       });
-      return reply.status(201).send(await loadAdminDraw(db, id));
+      return reply.status(201).send(await loadAdminDraw(db, id, currentUser(req).id));
     },
   );
 
@@ -183,7 +188,7 @@ export function drawRoutes(app: FastifyInstance, ctx: Ctx) {
       if (!rows[0]) throw new AppError('CONFLICT', 'ສະຖານະງວດບໍ່ອະນຸຍາດ');
       if (to === 'open') await ensureWarm(db, redis, req.params.id);
       await audit(db, { actorId: me.id, action, entity: 'draws', entityId: req.params.id, ip: req.ip });
-      return loadAdminDraw(db, req.params.id);
+      return loadAdminDraw(db, req.params.id, currentUser(req).id);
     });
   transition('/v1/admin/draws/:id/open', ['scheduled'], 'open', 'draw.open');
   transition('/v1/admin/draws/:id/close', ['open'], 'closed', 'draw.close');
@@ -205,7 +210,7 @@ export function drawRoutes(app: FastifyInstance, ctx: Ctx) {
       });
       await dropDraw(redis, req.params.id);
       req.log.info({ drawId: req.params.id, refunded }, 'draw cancelled');
-      return loadAdminDraw(db, req.params.id);
+      return loadAdminDraw(db, req.params.id, currentUser(req).id);
     },
   );
 
@@ -293,7 +298,7 @@ export function drawRoutes(app: FastifyInstance, ctx: Ctx) {
     );
     if (!rows[0]) throw new AppError('CONFLICT', 'ງວດຕ້ອງປິດແລ້ວ ແລະ ຍັງບໍ່ມີຜົນທີ່ລໍຖ້າຢືນຢັນ');
     await audit(db, { actorId: me.id, action: 'result.enter', entity: 'draws', entityId: req.params.id, after: req.body, ip: req.ip });
-    return loadAdminDraw(db, req.params.id);
+    return loadAdminDraw(db, req.params.id, currentUser(req).id);
   });
 
   r.post(
@@ -321,7 +326,7 @@ export function drawRoutes(app: FastifyInstance, ctx: Ctx) {
         return s;
       });
       await dropDraw(redis, req.params.id);
-      return { draw: await loadAdminDraw(db, req.params.id), settlement };
+      return { draw: await loadAdminDraw(db, req.params.id, currentUser(req).id), settlement };
     },
   );
 
@@ -333,6 +338,6 @@ export function drawRoutes(app: FastifyInstance, ctx: Ctx) {
     );
     if (!rows[0]) throw new AppError('CONFLICT', 'ບໍ່ມີຜົນທີ່ລໍຖ້າຢືນຢັນ');
     await audit(db, { actorId: me.id, action: 'result.reject', entity: 'draws', entityId: req.params.id, ip: req.ip });
-    return loadAdminDraw(db, req.params.id);
+    return loadAdminDraw(db, req.params.id, currentUser(req).id);
   });
 }

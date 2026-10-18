@@ -135,6 +135,16 @@ describe('withdrawals', () => {
     assert.deepEqual(await balanceOf(env, u.id), { balance: 200_000, held: 0 });
   });
 
+  test('ພະນັກງານການເງິນອະນຸມັດການຖອນຂອງຕົນເອງບໍ່ໄດ້', async () => {
+    const d = await deposit(finance, 100_000);
+    await webhook({ providerRef: d.providerRef, status: 'success', amount: 100_000 });
+    const w = (await withdraw(finance, 50_000)).json();
+    const r = await env.app.inject({ method: 'POST', url: `/v1/admin/withdrawals/${w.id}/approve`, headers: finance.headers });
+    assert.equal(r.statusCode, 403);
+    const other = await makeUser(env, { role: 'finance' });
+    assert.equal((await env.app.inject({ method: 'POST', url: `/v1/admin/withdrawals/${w.id}/approve`, headers: other.headers })).json().status, 'paid');
+  });
+
   test('ຕ້ອງ KYC ກ່ອນ ແລະ ເງິນບໍ່ພໍ', async () => {
     const noKyc = await makeUser(env, { kyc: 'unsubmitted' });
     assert.equal((await withdraw(noKyc, 50_000)).json().error, 'USER_NOT_ALLOWED');

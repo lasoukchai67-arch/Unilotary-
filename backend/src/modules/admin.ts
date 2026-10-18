@@ -42,7 +42,7 @@ export function adminRoutes(app: FastifyInstance, ctx: Ctx) {
   const finance = [auth, requireRole('admin', 'finance')];
   const adminOnly = [auth, requireRole('admin')];
 
-  r.get('/v1/admin/dashboard', { onRequest: staff, schema: { tags: ['admin'] } }, async () => {
+  r.get('/v1/admin/dashboard', { onRequest: staff, schema: { tags: ['admin'] } }, async (req) => {
     const { rows } = await db.query(`
       SELECT
         (SELECT COALESCE(SUM(total_amount), 0) FROM tickets WHERE status <> 'cancelled' AND created_at >= ${TODAY})::bigint AS sales,
@@ -60,7 +60,7 @@ export function adminRoutes(app: FastifyInstance, ctx: Ctx) {
       today: { sales: s.sales, tickets: s.tickets, deposits: s.deposits, withdrawals: s.withdrawals },
       users: { total: s.users_total, verified: s.users_verified },
       pending: { kyc: s.p_kyc, withdrawals: s.p_withdrawals, payouts: s.p_payouts, results: s.p_results },
-      currentDraw: await currentDraw(db, true),
+      currentDraw: await currentDraw(db, currentUser(req).id),
     };
   });
 
@@ -120,6 +120,7 @@ export function adminRoutes(app: FastifyInstance, ctx: Ctx) {
       async (req) => {
         const me = currentUser(req);
         const note = (req.body as { note?: string } | undefined)?.note ?? null;
+        if (req.params.userId === me.id) throw new AppError('FORBIDDEN', 'ກວດ KYC ຂອງຕົນເອງບໍ່ໄດ້');
         await withTx(db, async (c) => {
           const { rows } = await c.query(
             `UPDATE users SET kyc = $2, kyc_reviewed_by = $3, kyc_note = $4 WHERE id = $1 AND kyc = 'pending' RETURNING id`,
@@ -169,9 +170,10 @@ export function adminRoutes(app: FastifyInstance, ctx: Ctx) {
   r.post('/v1/admin/payouts/:id/approve', { onRequest: finance, schema: { tags: ['admin'], params: idParam } }, async (req) => {
     const me = currentUser(req);
     await withTx(db, async (c) => {
-      const { rows } = await c.query(`SELECT status FROM payouts WHERE id = $1 FOR UPDATE`, [req.params.id]);
+      const { rows } = await c.query(`SELECT status, user_id FROM payouts WHERE id = $1 FOR UPDATE`, [req.params.id]);
       if (!rows[0]) throw notFound('ລາຍການຈ່າຍລາງວັນ');
       if (rows[0].status !== 'pending') throw new AppError('CONFLICT', 'ລາຍການນີ້ຖືກດຳເນີນການແລ້ວ');
+      if (rows[0].user_id === me.id) throw new AppError('FORBIDDEN', 'ອະນຸມັດລາງວັນຂອງຕົນເອງບໍ່ໄດ້');
       await payPayout(c, req.params.id, me.id);
       await audit(c, { actorId: me.id, action: 'payout.approve', entity: 'payouts', entityId: req.params.id, ip: req.ip });
     });

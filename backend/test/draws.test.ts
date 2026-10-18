@@ -87,6 +87,10 @@ describe('draw lifecycle', () => {
 
     const entered = await post(maker, `/v1/admin/draws/${drawId}/result`, { resultNumber: '482175' });
     assert.equal(entered.json().pendingResult, '482175');
+    // ຜູ້ຢືນຢັນເບິ່ງເລກທີ່ປ້ອນບໍ່ໄດ້ (ຕ້ອງພິມເອງ)
+    const seen = (await env.app.inject({ method: 'GET', url: `/v1/admin/draws/${drawId}`, headers: checker.headers })).json();
+    assert.equal(seen.pendingResult, null);
+    assert.equal(seen.hasPendingResult, true);
     // ຄົນດຽວກັນຢືນຢັນເອງບໍ່ໄດ້
     assert.equal((await post(maker, `/v1/admin/draws/${drawId}/result/approve`, { resultNumber: '482175' })).statusCode, 403);
     // ເລກບໍ່ກົງ

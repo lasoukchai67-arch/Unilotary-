@@ -28,7 +28,8 @@ Base URL: `https://<host>/v1` (dev: `http://localhost:3000/v1`). Interactive doc
 { "id": 7, "drawNo": "0123", "drawDate": "2026-10-19", "salesOpenAt": "...", "salesCloseAt": "...",
   "status": "scheduled|open|closed|resulted|cancelled", "resultNumber": "482175" | null, "resultedAt": null,
   "rules": [DigitRule], "serverTime": "..." }
-// Admin view of Draw adds: "pendingResult": "482175"|null, "resultEnteredBy": 3|null,
+// Admin view of Draw adds: "pendingResult": "482175"|null (ONLY returned to the admin who entered it; null for
+//   everyone else so the checker must re-type the number), "hasPendingResult": true|false, "resultEnteredBy": 3|null,
 //   "rules": [DigitRule + "defaultNumberCap"], "stats": { "sales": 1500000, "tickets": 42 }
 
 // TicketLine
@@ -126,6 +127,7 @@ Payment provider webhook (server-to-server): `POST /webhooks/payments/:provider`
 ## Admin (`/admin/*`)
 
 Roles: `admin` = everything; `finance` = dashboard, withdrawals, payouts, reports (read others); `auditor` = all GET endpoints only.
+Staff cannot approve their own withdrawal, their own prize payout or their own KYC (`403 FORBIDDEN`).
 
 | Method | Path | Body | Response |
 |---|---|---|---|
