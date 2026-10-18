@@ -1,0 +1,31 @@
+{
+	email {$ACME_EMAIL}
+}
+
+{$DOMAIN} {
+	encode gzip zstd
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options nosniff
+		Referrer-Policy no-referrer
+		-Server
+	}
+
+	# API + webhooks + OpenAPI docs
+	@api path /v1/* /health /ready /docs /docs/*
+	handle @api {
+		reverse_proxy backend:3000
+	}
+
+	# ເວັບແອັດມິນ (SPA)
+	handle_path /admin* {
+		root * /srv/admin
+		try_files {path} /index.html
+		file_server
+	}
+
+	handle {
+		redir /admin/ 302
+	}
+}

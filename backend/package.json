@@ -12,7 +12,7 @@
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit",
     "migrate": "tsx src/migrate.ts",
-    "create-admin": "tsx scripts/create-admin.ts",
+    "create-admin": "tsx src/cli/create-admin.ts",
     "openapi": "tsx scripts/export-openapi.ts",
     "test": "bash scripts/test-local.sh"
   },

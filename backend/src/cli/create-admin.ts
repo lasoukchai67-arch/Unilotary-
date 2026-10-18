@@ -1,9 +1,8 @@
-// ຕັ້ງແອັດມິນຄົນທຳອິດ (ຫຼື ປ່ຽນ role ຂອງເບີທີ່ມີແລ້ວ):
-//   npm run create-admin -- 02055551234 "ຊື່ ແອັດມິນ" [admin|finance|auditor]
+// ຕັ້ງແອັດມິນຄົນທຳອິດ (ຫຼື ປ່ຽນ role ຂອງເບີທີ່ມີແລ້ວ). dev: npm run create-admin -- <phone> "<name>" [role]; production: node dist/cli/create-admin.js ...
 // ຈາກນັ້ນເຂົ້າເວັບແອັດມິນດ້ວຍ OTP ແລະ ຕັ້ງ PIN ໃນຄັ້ງທຳອິດ.
 import pg from 'pg';
-import { normalizePhone } from '../src/modules/auth.js';
-import { migrate } from '../src/migrate.js';
+import { normalizePhone } from '../modules/auth.js';
+import { migrate } from '../migrate.js';
 
 const [rawPhone, name, role = 'admin'] = process.argv.slice(2);
 if (!rawPhone || !name || !['admin', 'finance', 'auditor'].includes(role)) {

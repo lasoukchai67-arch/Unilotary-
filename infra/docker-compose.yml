@@ -1,0 +1,77 @@
+# ລະບົບທັງໝົດໃນເຄື່ອງດຽວ: PostgreSQL, Redis, backend, ເວັບແອັດມິນ + HTTPS
+#   cp infra/.env.example infra/.env   # ແລ້ວແກ້ຄ່າ
+#   docker compose -f infra/docker-compose.yml --env-file infra/.env up -d --build
+name: lao-lottery
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: lottery
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}
+      POSTGRES_DB: lottery
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lottery"]
+      interval: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ..
+      dockerfile: backend/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      DATABASE_URL: postgres://lottery:${POSTGRES_PASSWORD}@postgres:5432/lottery
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: ${JWT_SECRET:?set JWT_SECRET}
+      CORS_ORIGINS: https://${DOMAIN}
+      SMS_PROVIDER: ${SMS_PROVIDER:-http}
+      SMS_HTTP_URL: ${SMS_HTTP_URL:-}
+      SMS_HTTP_TOKEN: ${SMS_HTTP_TOKEN:-}
+      SMS_SENDER: ${SMS_SENDER:-LOTTERY}
+      PAYMENT_PROVIDER: ${PAYMENT_PROVIDER:-lapnet}
+      PAYMENT_WEBHOOK_SECRET: ${PAYMENT_WEBHOOK_SECRET:?set PAYMENT_WEBHOOK_SECRET}
+      LAPNET_API_URL: ${LAPNET_API_URL:-}
+      LAPNET_MERCHANT_ID: ${LAPNET_MERCHANT_ID:-}
+      LAPNET_API_KEY: ${LAPNET_API_KEY:-}
+    volumes:
+      - uploads:/data/uploads
+
+  web:
+    build:
+      context: ..
+      dockerfile: infra/web.Dockerfile
+    restart: unless-stopped
+    depends_on: [backend]
+    environment:
+      DOMAIN: ${DOMAIN:?set DOMAIN}
+      ACME_EMAIL: ${ACME_EMAIL:?set ACME_EMAIL}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - caddydata:/data
+
+volumes:
+  pgdata:
+  redisdata:
+  uploads:
+  caddydata:
